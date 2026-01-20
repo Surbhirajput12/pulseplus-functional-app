@@ -13,7 +13,8 @@ export enum AppView {
   PRESCRIPTIONS = 'prescriptions',
   VITALS = 'vitals',
   SCANNER = 'scanner',
-  EQUIPMENT_PORTAL = 'equipment-portal'
+  EQUIPMENT_PORTAL = 'equipment-portal',
+  PRODUCT_STUDIO = 'product-studio'
 }
 
 export enum Language {
@@ -35,6 +36,10 @@ export interface Specialist {
   image: string;
   availability: 'available' | 'busy' | 'offline';
   specialty: string;
+  experience: number;
+  mciNumber: string;
+  education: string;
+  verificationSource: 'Ayushman Bharat' | 'MCI Verified' | 'Pulseplus Global';
 }
 
 export interface EquipmentItem {
@@ -74,12 +79,11 @@ export interface DietAnalysis {
     fats: string;
     fiber: string;
   };
-  healthScore: number; // 1-5 stars
+  healthScore: number;
   warnings: string[];
   alternatives: string[];
 }
 
-// Added missing StudioProject interface to support storage of AI-edited product images.
 export interface StudioProject {
   id: string;
   original: string;

@@ -4,143 +4,221 @@ import { Specialist, AppView } from '../types';
 import BookingModal from './BookingModal';
 
 const specialists: Specialist[] = [
-  { id: '1', name: 'Dr. Sarah Mitchell', specialty: 'General Physician', description: 'Preventive care and chronic illness management expert.', fee: 299, image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400', availability: 'available' },
-  { id: '2', name: 'Dr. James Chen', specialty: 'Dermatologist', description: 'Expert in clinical dermatology, acne, and advanced skin rejuvenation.', fee: 399, image: 'https://images.unsplash.com/photo-1559839734-2b71f1e59816?auto=format&fit=crop&q=80&w=400', availability: 'busy' },
-  { id: '3', name: 'Dr. Elena Rossi', specialty: 'Pediatrician', description: 'Child development specialist focused on pediatric nutrition.', fee: 499, image: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?auto=format&fit=crop&q=80&w=400', availability: 'available' },
-  { id: '4', name: 'Dr. Michael Vogt', specialty: 'Cardiologist', description: 'Interventional cardiologist specializing in heart failure.', fee: 599, image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=400', availability: 'offline' },
-  { id: '5', name: 'Dr. Priya Sharma', specialty: 'Gynecologist', description: 'Comprehensive women’s health and reproductive medicine.', fee: 449, image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=400', availability: 'available' },
-  { id: '6', name: 'Dr. Arjan Singh', specialty: 'Dentist', description: 'Aesthetic dentistry and maxillofacial surgeon.', fee: 349, image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=400', availability: 'busy' },
+  { id: '1', name: 'Dr. Ananya Sharma', specialty: 'General Physician', description: 'Expert in preventive care and chronic illness management.', fee: 299, image: 'https://images.unsplash.com/photo-1559839734-2b71f1e59816?auto=format&fit=crop&q=80&w=400', availability: 'available', experience: 12, mciNumber: 'MCI-92831', education: 'MBBS, MD (General Medicine)', verificationSource: 'Ayushman Bharat' },
+  { id: '2', name: 'Dr. Rajesh Khanna', specialty: 'Dermatologist', description: 'Expert in clinical dermatology, acne, and skin rejuvenation.', fee: 399, image: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?auto=format&fit=crop&q=80&w=400', availability: 'busy', experience: 10, mciNumber: 'MCI-88219', education: 'MBBS, DDVL', verificationSource: 'MCI Verified' },
+  { id: '3', name: 'Dr. Meera Reddy', specialty: 'Pediatrician', description: 'Child development specialist focused on nutrition.', fee: 499, image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=400', availability: 'available', experience: 9, mciNumber: 'MCI-66120', education: 'MBBS, DCH, MD (Peds)', verificationSource: 'Ayushman Bharat' },
+  { id: '4', name: 'Dr. Amitav Ghosh', specialty: 'Cardiologist', description: 'Interventionist specializing in heart failure.', fee: 599, image: 'https://images.unsplash.com/photo-1559839734-2b71f1e59816?auto=format&fit=crop&q=80&w=400', availability: 'offline', experience: 20, mciNumber: 'MCI-00192', education: 'MBBS, MD, DM (Cardio)', verificationSource: 'MCI Verified' },
+  { id: '5', name: 'Dr. Sunita Rao', specialty: 'Gynecologist', description: 'Comprehensive women’s health and reproductive medicine.', fee: 449, image: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?auto=format&fit=crop&q=80&w=400', availability: 'available', experience: 18, mciNumber: 'MCI-99011', education: 'MBBS, MS (OBG)', verificationSource: 'Ayushman Bharat' },
+  { id: '6', name: 'Dr. Harpreet Singh', specialty: 'Dentist', description: 'Aesthetic dentistry and maxillofacial surgeon.', fee: 349, image: 'https://images.unsplash.com/photo-1623854767648-e7bb8009f0ad?auto=format&fit=crop&q=80&w=400', availability: 'busy', experience: 5, mciNumber: 'DCI-9921', education: 'BDS, MDS', verificationSource: 'MCI Verified' },
+  { id: 'g2', name: 'Dr. Vikram Seth', specialty: 'General Physician', description: 'Specialist in metabolic health and lifestyle diseases.', fee: 299, image: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?auto=format&fit=crop&q=80&w=400', availability: 'available', experience: 8, mciNumber: 'MCI-10293', education: 'MBBS, DNB', verificationSource: 'MCI Verified' },
+  { id: 'd2', name: 'Dr. Sneha Kapoor', specialty: 'Dermatologist', description: 'Cosmetic dermatologist and hair transplant surgeon.', fee: 399, image: 'https://images.unsplash.com/photo-1606811841689-23dfddce3e95?auto=format&fit=crop&q=80&w=400', availability: 'available', experience: 7, mciNumber: 'MCI-33102', education: 'MBBS, MD (Skin)', verificationSource: 'Ayushman Bharat' },
 ];
 
 interface SpecialistGridProps {
   onNavigate?: (view: AppView) => void;
+  onSpecialtySelect?: (specialty: string) => void;
   isDedicatedPage?: boolean;
+  initialFilter?: string;
+  limit?: number;
 }
 
-const SpecialistGrid: React.FC<SpecialistGridProps> = ({ onNavigate, isDedicatedPage = false }) => {
+const SpecialistGrid: React.FC<SpecialistGridProps> = ({ 
+  onNavigate, 
+  onSpecialtySelect, 
+  isDedicatedPage = false, 
+  initialFilter = 'All',
+  limit
+}) => {
   const [selectedSpecialist, setSelectedSpecialist] = useState<Specialist | null>(null);
+  const [showAuthModal, setShowAuthModal] = useState<Specialist | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
-  const [activeFilter, setActiveFilter] = useState('All');
+  const [activeFilter, setActiveFilter] = useState(initialFilter);
   const [isSearching, setIsSearching] = useState(false);
 
-  // Simulate network latency for search/filter feedback
+  useEffect(() => {
+    setActiveFilter(initialFilter);
+  }, [initialFilter]);
+
   useEffect(() => {
     if (searchTerm || activeFilter !== 'All') {
       setIsSearching(true);
-      const timer = setTimeout(() => setIsSearching(false), 600);
+      const timer = setTimeout(() => setIsSearching(false), 400);
       return () => clearTimeout(timer);
     }
   }, [searchTerm, activeFilter]);
 
-  const handleConfirmBooking = () => {
-    setSelectedSpecialist(null);
-    if (onNavigate) onNavigate(AppView.ACCOUNT);
-  };
-
-  const navigateToConsult = () => {
-    if (!isDedicatedPage && onNavigate) {
-      onNavigate(AppView.CONSULT);
+  const handleFilterClick = (cat: string) => {
+    if (!isDedicatedPage && onSpecialtySelect) {
+      onSpecialtySelect(cat);
+    } else {
+      setActiveFilter(cat);
     }
   };
 
-  const filteredSpecialists = specialists.filter(s => {
-    const matchesSearch = s.name.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                          s.specialty.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = activeFilter === 'All' || s.specialty.toLowerCase().includes(activeFilter.toLowerCase());
-    return matchesSearch && matchesFilter;
-  });
+  const getCategorizedSpecialists = () => {
+    const filtered = specialists.filter(s => {
+      const matchesSearch = s.specialty.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesFilter = activeFilter === 'All' || s.specialty.toLowerCase().includes(activeFilter.toLowerCase());
+      return matchesSearch && matchesFilter;
+    });
+
+    if (limit && !isDedicatedPage) {
+      const variety: Specialist[] = [];
+      const seenSpecialties = new Set<string>();
+      
+      filtered.forEach(s => {
+        if (!seenSpecialties.has(s.specialty)) {
+          variety.push(s);
+          seenSpecialties.add(s.specialty);
+        }
+      });
+      
+      if (variety.length < limit) {
+        filtered.forEach(s => {
+          if (variety.length < limit && !variety.find(v => v.id === s.id)) {
+            variety.push(s);
+          }
+        });
+      }
+      
+      return variety.slice(0, limit);
+    }
+
+    return limit ? filtered.slice(0, limit) : filtered;
+  };
+
+  const displaySpecialists = getCategorizedSpecialists();
 
   return (
-    <section className={`px-4 md:px-8 py-12 transition-all duration-500 ${isDedicatedPage ? '' : 'bg-white dark:bg-[#0f172a] rounded-[4rem] mx-4 md:mx-6 border border-slate-100 dark:border-slate-800'}`}>
-      <div className="max-w-5xl mx-auto mb-16 space-y-8">
-        {/* Market Standard Search Bar */}
-        <div className="flex flex-col md:flex-row gap-4 p-3 bg-slate-50 dark:bg-slate-800/50 rounded-[3rem] border border-slate-100 dark:border-slate-700 shadow-inner group focus-within:ring-2 ring-blue-100 transition-all duration-300">
-          <div className="relative flex-1">
-            <span className={`absolute left-8 top-1/2 -translate-y-1/2 text-2xl transition-transform duration-300 ${isSearching ? 'scale-125 opacity-50' : 'scale-100 opacity-100'}`}>
-              {isSearching ? '⏳' : '🩺'}
-            </span>
+    <section className={`px-4 md:px-8 py-6 transition-all duration-500 w-full ${isDedicatedPage ? '' : 'bg-white dark:bg-[#0f172a] rounded-[3.5rem] mx-auto border border-slate-100 dark:border-slate-800 max-w-[1440px]'}`}>
+      {!isDedicatedPage && (
+        <div className="max-w-3xl mx-auto mb-8 space-y-4">
+          <div className="flex items-center gap-3 p-1.5 bg-slate-50 dark:bg-slate-800/50 rounded-full border border-slate-100 dark:border-slate-700 shadow-inner group transition-all duration-300">
+            <span className="pl-4 text-lg">🔍</span>
             <input 
               type="text" 
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              onFocus={navigateToConsult}
-              placeholder="Search for 'Skin', 'Fever', or Dr. Name..." 
-              className="w-full pl-20 pr-8 py-6 rounded-[2.5rem] bg-transparent outline-none font-black text-[#1e2a3a] dark:text-white placeholder:text-slate-300 dark:placeholder:text-slate-500 text-lg"
+              placeholder="Find clinical field..." 
+              className="flex-1 pr-6 py-3 rounded-full bg-transparent outline-none font-bold text-[#1e2a3a] dark:text-white placeholder:text-slate-400 text-sm"
             />
           </div>
-          <button 
-            onClick={navigateToConsult}
-            className="bg-[#1e2a3a] dark:bg-[#2f80ed] hover:bg-[#2f80ed] dark:hover:bg-blue-600 text-white px-14 py-6 rounded-[2.5rem] font-black transition-all active:scale-95 shadow-xl uppercase tracking-widest text-[11px] flex items-center gap-2"
-          >
-            {isSearching && <div className="w-3 h-3 border-2 border-white border-t-transparent rounded-full animate-spin"></div>}
-            Filter Results
-          </button>
-        </div>
 
-        <div className="flex flex-wrap justify-center gap-4">
-          {['All', 'General', 'Dermatologist', 'Pediatrician', 'Cardiologist', 'Gynecologist', 'Dentist'].map(cat => (
-            <button 
-              key={cat}
-              onClick={() => {
-                setActiveFilter(cat);
-                navigateToConsult();
-              }}
-              className={`px-10 py-3.5 rounded-[1.5rem] text-[10px] font-black transition-all uppercase tracking-[0.2em] border ${
-                activeFilter === cat 
-                  ? 'bg-[#2f80ed] text-white border-[#2f80ed] shadow-lg scale-105' 
-                  : 'bg-white dark:bg-slate-800 text-slate-400 dark:text-slate-500 border-slate-100 dark:border-slate-700 hover:border-blue-100 dark:hover:border-blue-500/30 hover:text-slate-600 dark:hover:text-slate-300 hover:scale-105'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
+          <div className="flex flex-wrap justify-center gap-2">
+            {['All', 'General Physician', 'Dermatologist', 'Pediatrician', 'Cardiologist'].map(cat => (
+              <button 
+                key={cat}
+                onClick={() => handleFilterClick(cat)}
+                className={`px-4 py-1.5 rounded-full text-[8px] font-black transition-all uppercase tracking-widest border ${
+                  activeFilter === cat 
+                    ? 'bg-[#2f80ed] text-white border-[#2f80ed] shadow-md' 
+                    : 'bg-white dark:bg-slate-800 text-slate-400 border-slate-100 dark:border-slate-700 hover:border-blue-400'
+                }`}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-${isDedicatedPage ? '4' : '6'} gap-8 max-w-7xl mx-auto transition-opacity duration-300 ${isSearching ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
-        {filteredSpecialists.map((s) => (
+      <div className={`grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 max-w-full mx-auto transition-opacity duration-300 ${isSearching ? 'opacity-40 pointer-events-none' : 'opacity-100'}`}>
+        {displaySpecialists.map((s) => (
           <div 
             key={s.id} 
-            className="bg-white dark:bg-[#1e293b] rounded-[3.5rem] p-8 border border-slate-50 dark:border-white/5 hover:border-blue-200 dark:hover:border-blue-500/50 hover:shadow-2xl dark:hover:shadow-blue-500/10 hover:-translate-y-2 transition-all duration-500 flex flex-col items-center text-center group active:scale-95 cursor-pointer"
+            onClick={() => setShowAuthModal(s)}
+            className="bg-white dark:bg-[#1e293b] rounded-[2rem] p-3 border border-slate-100 dark:border-white/5 hover:border-blue-300 hover:shadow-xl transition-all duration-500 flex flex-col items-center text-center group active:scale-95 cursor-pointer h-full"
           >
-            <div className="w-full aspect-[4/5] overflow-hidden rounded-[2.5rem] mb-6 relative bg-slate-100 dark:bg-slate-800">
-              <img src={s.image} className="w-full h-full object-cover rounded-[2rem] group-hover:scale-110 transition-transform duration-1000" alt={s.name} />
-              <div className="absolute top-4 right-4 bg-white/90 dark:bg-[#1e293b]/90 backdrop-blur-md p-2 rounded-xl shadow-sm transform transition-transform group-hover:scale-110">
-                <div className={`w-2 h-2 rounded-full ${s.availability === 'available' ? 'bg-green-500 animate-pulse' : s.availability === 'busy' ? 'bg-yellow-500' : 'bg-red-500'}`} />
+            <div className="w-full aspect-[4/3] overflow-hidden rounded-[1.5rem] mb-3 relative bg-slate-100 dark:bg-slate-800">
+              <img src={s.image} className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" alt={s.specialty} />
+              <div className="absolute top-2 right-2 bg-white/90 dark:bg-[#1e293b]/90 backdrop-blur-md p-1 rounded-lg shadow-sm">
+                <div className={`w-1.5 h-1.5 rounded-full ${s.availability === 'available' ? 'bg-green-500 animate-pulse' : s.availability === 'busy' ? 'bg-yellow-500' : 'bg-red-500'}`} />
               </div>
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
             </div>
             
-            <div className="flex-1 w-full space-y-1">
-              <h3 className="font-black text-[#1e2a3a] dark:text-white text-lg group-hover:text-[#2f80ed] transition-colors duration-300">{s.name}</h3>
-              <p className="text-[9px] text-[#2f80ed] font-black uppercase tracking-widest">{s.specialty}</p>
-              <p className="text-xs text-slate-500 dark:text-slate-400 font-medium py-4 line-clamp-2 h-14 overflow-hidden group-hover:text-slate-700 dark:group-hover:text-slate-200 transition-colors">{s.description}</p>
+            <div className="flex-1 w-full space-y-2 px-1">
+              <div className="space-y-0.5">
+                {isDedicatedPage && (
+                  <h3 className="font-black text-[#1e2a3a] dark:text-white text-sm leading-tight mb-1">{s.name}</h3>
+                )}
+
+                <p className="text-lg text-[#2f80ed] font-black uppercase tracking-tighter leading-none group-hover:scale-105 transition-transform">
+                  {s.specialty.split(' ')[0]}
+                </p>
+                <p className="text-[9px] text-[#2f80ed]/60 font-black uppercase tracking-widest block leading-none">
+                  {s.specialty.split(' ').slice(1).join(' ')}
+                </p>
+                
+                <div className="flex items-center justify-center gap-1.5 mt-2 text-[7px] font-black text-slate-400 uppercase tracking-[0.2em] bg-slate-50 dark:bg-slate-800/50 py-1 rounded-full border border-slate-100 dark:border-slate-800">
+                  <span className="text-blue-500">🛡️</span> VERIFIED
+                </div>
+              </div>
               
               <button 
-                onClick={(e) => { e.stopPropagation(); setSelectedSpecialist(s); }}
-                className="w-full bg-[#1e2a3a] dark:bg-[#2f80ed] text-white py-4 rounded-[1.5rem] font-black text-[10px] uppercase tracking-widest hover:bg-[#2f80ed] dark:hover:bg-blue-600 transition-all duration-300 shadow-lg group-hover:shadow-blue-200"
+                onClick={(e) => { e.stopPropagation(); setShowAuthModal(s); }}
+                className="w-full bg-[#1e2a3a] dark:bg-[#2f80ed] text-white py-2.5 rounded-xl font-black text-[8px] uppercase tracking-[0.2em] hover:bg-[#2f80ed] transition-all"
               >
-                Book Consult
+                Profile • ₹{s.fee}
               </button>
             </div>
           </div>
         ))}
-        {filteredSpecialists.length === 0 && !isSearching && (
-          <div className="col-span-full py-20 text-center animate-in fade-in zoom-in duration-500">
-            <div className="text-6xl mb-6">🔍</div>
-            <div className="text-slate-400 dark:text-slate-500 font-black uppercase tracking-widest text-sm">No matching specialists found.</div>
-            <button onClick={() => {setSearchTerm(''); setActiveFilter('All');}} className="mt-4 text-[#2f80ed] font-black underline hover:text-blue-700 transition-colors">Clear all filters</button>
-          </div>
-        )}
       </div>
 
-      {isSearching && (
-        <div className="flex justify-center py-20 animate-pulse">
-          <div className="flex gap-2">
-            <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce"></div>
-            <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce delay-150"></div>
-            <div className="w-3 h-3 bg-blue-500 rounded-full animate-bounce delay-300"></div>
-          </div>
+      {showAuthModal && (
+        <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/70 backdrop-blur-xl animate-in fade-in duration-300">
+           <div className="bg-white dark:bg-[#0f172a] w-full max-w-3xl rounded-[3rem] shadow-2xl overflow-hidden relative border border-white/10 animate-in zoom-in-95">
+              <button 
+                onClick={() => setShowAuthModal(null)}
+                className="absolute top-6 right-6 p-3 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 hover:text-red-500 transition-all z-20"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" d="M6 18L18 6M6 6l12 12" /></svg>
+              </button>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2">
+                 <div className="aspect-square lg:aspect-auto bg-slate-50 dark:bg-slate-900 relative">
+                    <img src={showAuthModal.image} className="w-full h-full object-cover" alt="Professional" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#0f172a] via-transparent to-transparent"></div>
+                    <div className="absolute bottom-6 left-6 space-y-1">
+                       <span className="px-2 py-0.5 bg-green-500 text-white rounded-full text-[7px] font-black uppercase tracking-widest shadow-xl">Verified Provider</span>
+                       <h3 className="text-2xl font-black text-white tracking-tighter leading-none">{showAuthModal.name}</h3>
+                       <p className="text-blue-300 font-black uppercase tracking-[0.2em] text-[8px]">{showAuthModal.specialty}</p>
+                    </div>
+                 </div>
+
+                 <div className="p-8 space-y-6 overflow-y-auto bg-white dark:bg-[#0f172a]">
+                    <div className="space-y-4">
+                       <div className="space-y-1">
+                          <h4 className="text-[8px] font-black text-blue-500 uppercase tracking-widest">About Professional</h4>
+                          <p className="text-slate-500 dark:text-slate-400 font-medium text-xs leading-relaxed">{showAuthModal.description}</p>
+                       </div>
+
+                       <div className="grid grid-cols-2 gap-3">
+                          <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+                             <p className="text-[7px] font-black text-slate-400 uppercase mb-1">Exp.</p>
+                             <p className="text-sm font-black text-[#1e2a3a] dark:text-white">{showAuthModal.experience}+ Yrs</p>
+                          </div>
+                          <div className="p-3 bg-slate-50 dark:bg-slate-800/50 rounded-xl border border-slate-100 dark:border-slate-800">
+                             <p className="text-[7px] font-black text-slate-400 uppercase mb-1">MCI ID</p>
+                             <p className="text-xs font-black text-[#1e2a3a] dark:text-white truncate">{showAuthModal.mciNumber}</p>
+                          </div>
+                       </div>
+
+                       <div className="p-4 bg-blue-50 dark:bg-blue-900/10 rounded-2xl border border-blue-100 dark:border-blue-800">
+                          <h5 className="text-[8px] font-black text-[#2f80ed] uppercase tracking-widest mb-1">Credentials</h5>
+                          <p className="text-xs font-black text-[#1e2a3a] dark:text-white">{showAuthModal.education}</p>
+                       </div>
+                    </div>
+
+                    <button 
+                      onClick={() => { setSelectedSpecialist(showAuthModal); setShowAuthModal(null); }}
+                      className="w-full bg-[#1e2a3a] dark:bg-[#2f80ed] text-white py-4 rounded-2xl font-black text-base shadow-xl hover:scale-[1.02] transition-all active:scale-95"
+                    >
+                      Book Consult • ₹{showAuthModal.fee}
+                    </button>
+                 </div>
+              </div>
+           </div>
         </div>
       )}
 
@@ -148,7 +226,10 @@ const SpecialistGrid: React.FC<SpecialistGridProps> = ({ onNavigate, isDedicated
         <BookingModal 
           specialist={selectedSpecialist} 
           onClose={() => setSelectedSpecialist(null)}
-          onConfirm={handleConfirmBooking}
+          onConfirm={() => {
+            setSelectedSpecialist(null);
+            if (onNavigate) onNavigate(AppView.ACCOUNT);
+          }}
         />
       )}
     </section>

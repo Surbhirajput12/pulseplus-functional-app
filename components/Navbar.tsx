@@ -20,8 +20,8 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount, isDark
 
   return (
     <>
-      <header className="bg-white dark:bg-[#0f172a] sticky top-0 z-[100] border-b border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-300">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <header className="bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-[100] border-b border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-300">
+        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-20">
             <div 
               className="flex items-center gap-3 cursor-pointer group"
@@ -31,18 +31,19 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount, isDark
               <span className="text-2xl font-black text-[#1e2a3a] dark:text-white tracking-tighter">Pulseplus</span>
             </div>
 
-            <nav className="hidden lg:flex items-center gap-2">
+            <nav className="hidden lg:flex items-center gap-1">
               {[
                 { label: 'Home', view: AppView.HOME },
                 { label: 'Consult', view: AppView.CONSULT },
                 { label: 'Pharmacy', view: AppView.STORE },
+                { label: 'Studio', view: AppView.PRODUCT_STUDIO },
                 { label: 'Wellness', view: AppView.WELLNESS },
                 { label: 'Vault', view: AppView.ACCOUNT },
               ].map((item) => (
                 <button
                   key={item.label}
                   onClick={() => setView(item.view)}
-                  className={`px-4 py-2 rounded-xl text-[12px] font-black uppercase tracking-wider transition-all ${
+                  className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
                     currentView === item.view 
                       ? 'text-[#2f80ed] bg-blue-50 dark:bg-blue-500/10' 
                       : 'text-slate-500 dark:text-slate-400 hover:text-[#1e2a3a] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
@@ -56,16 +57,17 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount, isDark
             <div className="flex items-center gap-3">
               <button 
                 onClick={toggleLang}
-                className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-100 dark:border-slate-700 text-[10px] font-black uppercase text-slate-500 dark:text-slate-400 hover:border-blue-200 transition-all"
+                className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-black uppercase text-slate-500 dark:text-slate-300 hover:border-blue-400 transition-all"
               >
                 {lang === Language.EN ? 'EN' : 'हिं'}
               </button>
 
               <button 
                 onClick={toggleDarkMode}
-                className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-500 dark:text-slate-400 hover:text-blue-500 transition-colors"
+                className="p-2.5 rounded-xl bg-[#f8fafc] dark:bg-slate-800 text-[#1e2a3a] dark:text-yellow-400 border border-slate-200 dark:border-slate-700 hover:scale-105 active:scale-95 transition-all shadow-sm"
+                aria-label="Toggle Dark Mode"
               >
-                {isDarkMode ? '🌞' : '🌙'}
+                {isDarkMode ? '☀️' : '🌙'}
               </button>
 
               <button 
@@ -100,15 +102,15 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount, isDark
         </div>
 
         {isMobileMenuOpen && (
-          <div className="lg:hidden bg-white dark:bg-[#0f172a] border-t border-slate-100 dark:border-slate-800 p-6 space-y-4 animate-in slide-in-from-top duration-300">
+          <div className="lg:hidden bg-white dark:bg-[#0f172a] border-t border-slate-100 dark:border-slate-800 p-6 space-y-4 animate-in slide-in-from-top duration-300 shadow-2xl">
              <div className="grid grid-cols-2 gap-4">
-                <button onClick={() => { setView(AppView.HOME); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white">Home</button>
-                <button onClick={() => { setView(AppView.CONSULT); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white">Consult</button>
-                <button onClick={() => { setView(AppView.STORE); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white">Pharmacy</button>
-                <button onClick={() => { setView(AppView.WELLNESS); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white">Wellness</button>
-                <button onClick={() => { setView(AppView.ACCOUNT); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white">Health Vault</button>
+                <button onClick={() => { setView(AppView.HOME); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white border border-slate-100 dark:border-slate-700">Home</button>
+                <button onClick={() => { setView(AppView.CONSULT); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white border border-slate-100 dark:border-slate-700">Consult</button>
+                <button onClick={() => { setView(AppView.STORE); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white border border-slate-100 dark:border-slate-700">Pharmacy</button>
+                <button onClick={() => { setView(AppView.PRODUCT_STUDIO); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white border border-slate-100 dark:border-slate-700">Studio</button>
+                <button onClick={() => { setView(AppView.WELLNESS); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white border border-slate-100 dark:border-slate-700">Wellness</button>
              </div>
-             <button onClick={() => { setShowLogin(true); setIsMobileMenuOpen(false); }} className="w-full bg-[#1e2a3a] dark:bg-blue-600 text-white py-4 rounded-2xl font-black uppercase text-xs">Login with ABHA</button>
+             <button onClick={() => { setShowLogin(true); setIsMobileMenuOpen(false); }} className="w-full bg-[#1e2a3a] dark:bg-[#2f80ed] text-white py-4 rounded-2xl font-black uppercase text-xs shadow-lg">Login with ABHA</button>
           </div>
         )}
       </header>
