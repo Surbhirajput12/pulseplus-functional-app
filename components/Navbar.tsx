@@ -33,6 +33,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount, isDark
 
             <nav className="hidden lg:flex items-center gap-2">
               {[
+                { label: 'Home', view: AppView.HOME },
                 { label: 'Consult', view: AppView.CONSULT },
                 { label: 'Pharmacy', view: AppView.STORE },
                 { label: 'Wellness', view: AppView.WELLNESS },
@@ -101,6 +102,7 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount, isDark
         {isMobileMenuOpen && (
           <div className="lg:hidden bg-white dark:bg-[#0f172a] border-t border-slate-100 dark:border-slate-800 p-6 space-y-4 animate-in slide-in-from-top duration-300">
              <div className="grid grid-cols-2 gap-4">
+                <button onClick={() => { setView(AppView.HOME); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white">Home</button>
                 <button onClick={() => { setView(AppView.CONSULT); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white">Consult</button>
                 <button onClick={() => { setView(AppView.STORE); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white">Pharmacy</button>
                 <button onClick={() => { setView(AppView.WELLNESS); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white">Wellness</button>

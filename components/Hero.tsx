@@ -28,8 +28,24 @@ const Hero: React.FC<HeroProps> = ({ onNavigate, lang }) => {
   const active = content[lang];
 
   return (
-    <section className="bg-gradient-to-br from-[#eef6fb] to-white dark:from-[#111827] dark:to-[#0b0f1a] rounded-[3rem] md:rounded-[4rem] mx-4 md:mx-6 mt-8 p-8 md:p-20 border border-white dark:border-white/5 shadow-sm overflow-hidden relative transition-colors duration-300">
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center relative z-10">
+    <section className="relative rounded-[3rem] md:rounded-[4rem] mx-4 md:mx-6 mt-8 overflow-hidden min-h-[600px] flex items-center transition-colors duration-300">
+      {/* Background Video Layer */}
+      <div className="absolute inset-0 z-0">
+        <video 
+          autoPlay 
+          loop 
+          muted 
+          playsInline 
+          className="w-full h-full object-cover"
+        >
+          <source src="https://assets.mixkit.co/videos/preview/mixkit-doctor-working-with-a-laptop-and-a-stethoscope-40540-large.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+        {/* Overlay for readability */}
+        <div className="absolute inset-0 bg-gradient-to-br from-[#eef6fb]/95 via-[#eef6fb]/80 to-white/50 dark:from-[#0b0f1a]/95 dark:via-[#0b0f1a]/85 dark:to-transparent transition-colors duration-300"></div>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center relative z-10 p-8 md:p-20 w-full">
         <div className="space-y-8 md:space-y-12">
           <div className="inline-flex items-center gap-2 px-5 py-2 bg-blue-100/50 dark:bg-blue-500/10 text-[#2f80ed] rounded-full text-[10px] font-black uppercase tracking-widest border border-blue-200/50 dark:border-blue-500/20 animate-pulse">
             <span className="w-2 h-2 bg-blue-500 rounded-full"></span>
@@ -59,20 +75,32 @@ const Hero: React.FC<HeroProps> = ({ onNavigate, lang }) => {
         </div>
         
         <div className="space-y-8">
-           {/* Video Guide Component */}
-           <div className="relative group rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white dark:border-slate-800">
-              <div className="aspect-video bg-slate-900 flex items-center justify-center relative">
-                {/* Placeholder for Video Guide */}
-                <img 
-                  src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=1000" 
-                  className="absolute inset-0 w-full h-full object-cover opacity-40 group-hover:scale-105 transition-transform duration-1000"
-                  alt="App Working"
-                />
-                <div className="relative z-10 text-center space-y-4">
-                   <button className="w-20 h-20 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white border border-white/30 hover:scale-110 transition-transform shadow-2xl">
-                     <span className="text-4xl ml-2">▶</span>
+           {/* Feature Showcase Overlay */}
+           <div className="relative group rounded-[3rem] overflow-hidden shadow-2xl border-8 border-white/50 dark:border-slate-800/50 backdrop-blur-md">
+              <div className="aspect-video bg-black/40 flex items-center justify-center relative">
+                <div className="absolute inset-0 flex flex-col justify-center items-center p-8 text-center space-y-6">
+                   <h4 className="text-white text-2xl font-black tracking-tight">Experience Pulseplus</h4>
+                   <div className="grid grid-cols-2 gap-4 w-full">
+                      <div className="bg-white/10 p-3 rounded-2xl border border-white/20">
+                         <p className="text-[10px] font-black uppercase text-blue-300">Nutrition</p>
+                         <p className="text-white text-[9px] font-medium">AI Meal Analysis</p>
+                      </div>
+                      <div className="bg-white/10 p-3 rounded-2xl border border-white/20">
+                         <p className="text-[10px] font-black uppercase text-green-300">Yoga</p>
+                         <p className="text-white text-[9px] font-medium">Posture Correction</p>
+                      </div>
+                      <div className="bg-white/10 p-3 rounded-2xl border border-white/20">
+                         <p className="text-[10px] font-black uppercase text-orange-300">Pharmacy</p>
+                         <p className="text-white text-[9px] font-medium">60% Off Meds</p>
+                      </div>
+                      <div className="bg-white/10 p-3 rounded-2xl border border-white/20">
+                         <p className="text-[10px] font-black uppercase text-red-300">Vault</p>
+                         <p className="text-white text-[9px] font-medium">ABHA Integrated</p>
+                      </div>
+                   </div>
+                   <button className="bg-white text-[#1e2a3a] px-8 py-3 rounded-full font-black text-xs uppercase tracking-widest shadow-xl hover:scale-110 transition-transform">
+                      Watch Feature Demo
                    </button>
-                   <p className="text-white font-black uppercase text-[10px] tracking-widest bg-black/40 px-6 py-2 rounded-full">Guide: How Pulseplus Works</p>
                 </div>
               </div>
            </div>
@@ -91,8 +119,6 @@ const Hero: React.FC<HeroProps> = ({ onNavigate, lang }) => {
            </div>
         </div>
       </div>
-
-      <div className="absolute -top-24 -left-24 w-96 h-96 bg-blue-100/30 dark:bg-blue-500/5 rounded-full blur-[100px] pointer-events-none"></div>
     </section>
   );
 };
