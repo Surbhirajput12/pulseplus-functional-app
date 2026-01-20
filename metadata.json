@@ -1,0 +1,8 @@
+{
+  "name": "Pulseplus Health Platform",
+  "description": "An integrated healthcare platform for medical consulting, diet planning, and health records.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
