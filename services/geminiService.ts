@@ -116,14 +116,13 @@ export async function generateWellnessPlan(type: 'diet' | 'yoga', preferences: s
   }
 }
 
-// Added editProductImage function using gemini-2.5-flash-image for high-quality image manipulation and background removal tasks.
+/**
+ * Edit images using gemini-2.5-flash-image based on text prompt and source image.
+ */
 export async function editProductImage(base64Image: string, prompt: string): Promise<string | null> {
   try {
     const matches = base64Image.match(/^data:([^;]+);base64,(.+)$/);
     if (!matches) return null;
-
-    const mimeType = matches[1];
-    const data = matches[2];
 
     const response: GenerateContentResponse = await ai.models.generateContent({
       model: 'gemini-2.5-flash-image',
@@ -131,8 +130,8 @@ export async function editProductImage(base64Image: string, prompt: string): Pro
         parts: [
           {
             inlineData: {
-              mimeType,
-              data,
+              data: matches[2],
+              mimeType: matches[1],
             },
           },
           {
@@ -142,18 +141,15 @@ export async function editProductImage(base64Image: string, prompt: string): Pro
       },
     });
 
-    if (response.candidates && response.candidates.length > 0 && response.candidates[0].content.parts) {
-      for (const part of response.candidates[0].content.parts) {
-        if (part.inlineData) {
-          const base64EncodeString = part.inlineData.data;
-          const resultMimeType = part.inlineData.mimeType || 'image/png';
-          return `data:${resultMimeType};base64,${base64EncodeString}`;
-        }
+    // Iterate through parts to find the image response.
+    for (const part of response.candidates?.[0]?.content?.parts || []) {
+      if (part.inlineData) {
+        return `data:${part.inlineData.mimeType};base64,${part.inlineData.data}`;
       }
     }
     return null;
   } catch (error) {
-    console.error("AI Image Editing Error:", error);
+    console.error("Edit Product Image Error:", error);
     return null;
   }
 }

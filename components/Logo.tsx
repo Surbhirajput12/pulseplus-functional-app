@@ -1,26 +1,23 @@
 
 import React from 'react';
 
-const Logo: React.FC<{ className?: string }> = ({ className = "w-10 h-10" }) => {
+const Logo: React.FC<{ className?: string }> = ({ className = "w-12 h-12" }) => {
   return (
-    <div className={`relative flex items-center justify-center ${className}`}>
+    <div className={`relative flex items-center justify-center ${className} bg-white dark:bg-slate-900 rounded-2xl shadow-sm border border-slate-100 dark:border-slate-800 p-2`}>
       <svg viewBox="0 0 50 50" className="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
-        {/* Red Pulse Beat Path */}
+        {/* Red Pulse Line */}
         <path 
-          d="M5 25H12L15 15L22 35L29 10L32 25H40" 
+          d="M5 25H15L18 10L25 40L32 20L35 25H45" 
           stroke="#ef4444" 
-          strokeWidth="3.5" 
+          strokeWidth="4" 
           strokeLinecap="round" 
           strokeLinejoin="round"
-          className="animate-[pulse_2s_infinite]"
         />
-        {/* Blue Plus Sign Circle Backdrop */}
-        <circle cx="40" cy="15" r="7" fill="white" className="shadow-sm" />
-        {/* Blue Plus Sign */}
+        {/* Blue Plus Icon - Offset to the right slightly */}
         <path 
-          d="M40 10V20M35 15H45" 
+          d="M38 8V18M33 13H43" 
           stroke="#2f80ed" 
-          strokeWidth="3.5" 
+          strokeWidth="6" 
           strokeLinecap="round"
         />
       </svg>

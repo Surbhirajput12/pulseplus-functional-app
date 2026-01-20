@@ -1,94 +1,105 @@
 
 import React from 'react';
-import { AppView } from '../types';
+import { AppView, Language } from '../types';
+import { translations } from '../i18n';
 import HealthBot from './HealthBot';
 
 interface AskScanProps {
   onNavigate: (view: AppView) => void;
+  lang?: Language;
 }
 
-const AskScan: React.FC<AskScanProps> = ({ onNavigate }) => {
-  const cards = [
+const AskScan: React.FC<AskScanProps> = ({ onNavigate, lang = Language.EN }) => {
+  const t = translations[lang].sections;
+
+  const apps = [
     { 
       title: 'Nutrition Hub', 
-      desc: 'Remedies, yoga guides, and essential nutrient encyclopedia.', 
+      desc: 'Individual app for natural wellness & remedies.', 
       icon: '🥗', 
       view: AppView.NUTRITION_GUIDE, 
       color: 'text-green-600', 
       bg: 'bg-green-50 dark:bg-green-900/20', 
       img: 'https://images.unsplash.com/photo-1490645935967-10de6ba17061?auto=format&fit=crop&q=80&w=600',
-      tag: 'Wellness Hub'
+      tag: 'Verified Remedies'
     },
     { 
       title: 'Diet Planner', 
-      desc: 'Personalized clinical meal plans with macro-nutrient tracking.', 
+      desc: 'Intake tracker, macro insights, and calorie budget.', 
       icon: '📋', 
       view: AppView.DIET_PLAN, 
       color: 'text-orange-600', 
       bg: 'bg-orange-50 dark:bg-orange-900/20', 
       img: 'https://images.unsplash.com/photo-1498837167922-ddd27525d352?auto=format&fit=crop&q=80&w=600',
-      tag: 'Personalized'
+      tag: 'Clinical Tracking'
     },
     { 
       title: 'Yoga Academy', 
-      desc: 'Studio sessions for chronic stress reduction and physical therapy.', 
+      desc: 'Posture analysis, live flows, and meditation apps.', 
       icon: '🧘‍♀️', 
       view: AppView.YOGA, 
       color: 'text-purple-600', 
       bg: 'bg-purple-50 dark:bg-purple-900/20', 
       img: 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&q=80&w=600',
-      tag: 'Studio'
+      tag: 'Motion AI'
     },
     { 
-      title: 'Health Records', 
-      desc: 'High-security encryption for your medical identity.', 
-      icon: '🔐', 
-      view: AppView.ACCOUNT, 
-      color: 'text-blue-600', 
-      bg: 'bg-blue-50 dark:bg-blue-900/20', 
-      img: 'https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&q=80&w=600',
-      tag: 'Secure'
+      title: 'Remedy Hub', 
+      desc: 'Home remedies verified by clinical experts.', 
+      icon: '🍯', 
+      view: AppView.NUTRITION_GUIDE, 
+      color: 'text-amber-600', 
+      bg: 'bg-amber-50 dark:bg-amber-900/20', 
+      img: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?auto=format&fit=crop&q=80&w=600',
+      tag: 'Ancient Secrets'
     },
   ];
 
   return (
-    <section className="px-4 md:px-6 py-12 space-y-12 max-w-7xl mx-auto w-full">
-      <div className="space-y-4 max-w-3xl">
-        <h2 className="text-4xl md:text-6xl font-black text-[#1e2a3a] dark:text-white leading-tight tracking-tighter">Wellness Studio</h2>
-        <p className="text-slate-500 dark:text-slate-400 text-lg md:text-xl font-medium tracking-tight">AI diagnostics meets clinical lifestyle design.</p>
+    <section className="px-4 md:px-6 py-20 space-y-16 max-w-7xl mx-auto w-full">
+      <div className="space-y-6 max-w-3xl">
+        <h2 className="text-5xl md:text-6xl font-black text-slate-800 dark:text-white leading-none tracking-tighter">
+          {t.wellnessCenter}
+        </h2>
+        <p className="text-slate-500 dark:text-slate-400 text-xl font-medium tracking-tight leading-relaxed">
+          {t.wellnessSub}
+        </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 w-full">
-        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-          {cards.map((card) => (
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 w-full items-start">
+        <div className="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-8 w-full">
+          {apps.map((app) => (
             <div 
-              key={card.title}
-              onClick={() => onNavigate(card.view)}
-              className="group bg-white dark:bg-[#1e293b] rounded-[3rem] p-6 shadow-sm border border-slate-100 dark:border-slate-800 hover:border-blue-200 dark:hover:border-blue-500/50 hover:shadow-xl transition-all cursor-pointer flex flex-col active:scale-[0.98]"
+              key={app.title}
+              onClick={() => onNavigate(app.view)}
+              className="group bg-white dark:bg-slate-800 rounded-[4rem] p-8 shadow-sm border border-slate-100 dark:border-white/5 hover:shadow-2xl transition-all cursor-pointer flex flex-col active:scale-[0.98]"
             >
-              <div className="relative aspect-video mb-6 overflow-hidden rounded-[2rem] bg-slate-50 dark:bg-slate-900 shadow-inner">
+              <div className="relative aspect-[16/10] mb-8 overflow-hidden rounded-[3rem] bg-slate-50 dark:bg-slate-900 border border-slate-100 dark:border-white/5 shadow-inner">
                 <img 
-                  src={card.img} 
-                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" 
-                  alt={card.title} 
+                  src={app.img} 
+                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-1000" 
+                  alt={app.title} 
                 />
-                <div className={`absolute top-4 left-4 ${card.bg} ${card.color} w-12 h-12 rounded-[1rem] flex items-center justify-center text-2xl font-bold shadow-lg border-2 border-white dark:border-slate-700`}>
-                  {card.icon}
+                <div className={`absolute top-6 left-6 ${app.bg} ${app.color} w-16 h-16 rounded-[1.5rem] flex items-center justify-center text-4xl shadow-2xl backdrop-blur-md border border-white/20`}>
+                  {app.icon}
                 </div>
-                <div className="absolute top-4 right-4 bg-[#1e2a3a]/80 dark:bg-black/80 backdrop-blur-md text-white px-4 py-1.5 rounded-full text-[9px] font-black uppercase tracking-widest">
-                  {card.tag}
+                <div className="absolute top-6 right-6 bg-white/95 dark:bg-slate-900/90 backdrop-blur-md text-slate-800 dark:text-white px-5 py-2 rounded-full text-[10px] font-black uppercase tracking-widest border border-slate-100 dark:border-white/10 shadow-lg">
+                  {app.tag}
                 </div>
               </div>
               
-              <div className="space-y-2">
-                <h3 className="text-2xl font-black text-[#1e2a3a] dark:text-white group-hover:text-[#2f80ed] transition-colors">{card.title}</h3>
-                <p className="text-slate-500 dark:text-slate-400 text-sm leading-relaxed">{card.desc}</p>
+              <div className="space-y-2 px-2">
+                <h3 className="text-3xl font-black text-slate-800 dark:text-white group-hover:text-[#2f80ed] transition-colors tracking-tight">{app.title}</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed font-medium">{app.desc}</p>
+              </div>
+              <div className="mt-8 px-2 flex justify-between items-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <span className="text-[10px] font-black text-[#2f80ed] uppercase tracking-widest">Enter Application ➔</span>
               </div>
             </div>
           ))}
         </div>
         
-        <div className="lg:col-span-1 h-full min-h-[600px] w-full">
+        <div className="lg:col-span-1 h-full min-h-[600px] w-full lg:sticky lg:top-24">
           <HealthBot />
         </div>
       </div>

@@ -1,11 +1,13 @@
 
-import React from 'react';
+import React, { useState, useMemo } from 'react';
 
 interface LabReportsViewProps {
   onBack: () => void;
 }
 
 const LabReportsView: React.FC<LabReportsViewProps> = ({ onBack }) => {
+  const [search, setSearch] = useState('');
+  
   const reports = [
     { id: '1', title: 'Complete Blood Count', date: 'March 12, 2025', lab: 'Apex Diagnostic Center', status: 'Normal' },
     { id: '2', title: 'Lipid Profile Test', date: 'Feb 28, 2025', lab: 'City Care Hospital', status: 'Attention Required' },
@@ -13,11 +15,19 @@ const LabReportsView: React.FC<LabReportsViewProps> = ({ onBack }) => {
     { id: '4', title: 'Thyroid Stimulating Hormone', date: 'Dec 10, 2024', lab: 'Apex Diagnostic Center', status: 'Normal' },
   ];
 
+  const filteredReports = useMemo(() => {
+    const q = search.toLowerCase().trim();
+    return reports.filter(r => 
+      r.title.toLowerCase().includes(q) || 
+      r.lab.toLowerCase().includes(q)
+    );
+  }, [search]);
+
   return (
     <div className="py-12 px-6 max-w-6xl mx-auto space-y-12">
       <div className="flex items-center justify-between gap-6">
         <div className="flex items-center gap-6">
-          <button onClick={onBack} className="p-4 bg-white rounded-2xl shadow-sm hover:bg-slate-50">
+          <button onClick={onBack} className="p-4 bg-white rounded-2xl shadow-sm hover:bg-slate-50 transition-all">
             <svg className="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
             </svg>
@@ -37,13 +47,19 @@ const LabReportsView: React.FC<LabReportsViewProps> = ({ onBack }) => {
           <div className="flex flex-col md:flex-row gap-4">
              <div className="flex-1 relative">
                 <span className="absolute left-6 top-1/2 -translate-y-1/2 text-slate-400">🔍</span>
-                <input type="text" placeholder="Search by test name or lab..." className="w-full pl-16 pr-6 py-5 rounded-[2rem] bg-slate-50 border border-slate-100 font-bold outline-none" />
+                <input 
+                  type="text" 
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search by test name or lab center..." 
+                  className="w-full pl-16 pr-6 py-5 rounded-[2rem] bg-slate-50 border border-slate-100 font-bold outline-none focus:ring-2 ring-blue-100 transition-all" 
+                />
              </div>
              <button className="bg-slate-100 text-slate-600 px-8 py-5 rounded-[2rem] font-black text-sm uppercase tracking-widest">Filters</button>
           </div>
 
           <div className="space-y-4">
-            {reports.map(report => (
+            {filteredReports.map(report => (
               <div key={report.id} className="p-8 bg-slate-50 rounded-[3rem] border border-white shadow-inner flex flex-col md:flex-row items-center justify-between gap-6 hover:bg-white hover:shadow-xl transition-all group">
                 <div className="flex items-center gap-6">
                   <div className="w-16 h-16 bg-white rounded-[1.5rem] shadow-sm flex items-center justify-center text-3xl group-hover:scale-110 transition-transform">📄</div>
@@ -62,6 +78,11 @@ const LabReportsView: React.FC<LabReportsViewProps> = ({ onBack }) => {
                 </div>
               </div>
             ))}
+            {filteredReports.length === 0 && (
+              <div className="py-20 text-center opacity-30">
+                <p className="font-black text-slate-400 uppercase tracking-widest">No reports found matching your search.</p>
+              </div>
+            )}
           </div>
         </div>
       </div>

@@ -19,8 +19,9 @@ const ProductStudio: React.FC<ProductStudioProps> = ({ onBack }) => {
     if (file) {
       const reader = new FileReader();
       reader.onload = (event) => {
-        setImage(event.target?.result as string);
-        setEditedImage(null);
+        const result = event.target?.result as string;
+        setImage(result);
+        setEditedImage(null); // Keep the result side blank until processed
       };
       reader.readAsDataURL(file);
     }
@@ -34,16 +35,29 @@ const ProductStudio: React.FC<ProductStudioProps> = ({ onBack }) => {
     const result = await editProductImage(image, activePrompt);
     if (result) {
       setEditedImage(result);
+      // Added prompt to storage object to fix type error
       storage.saveStudioProject({
         id: Date.now().toString(),
         original: image,
         edited: result,
+        prompt: activePrompt,
         timestamp: Date.now()
       });
     } else {
       alert("AI was unable to process this request. Try a simpler prompt like 'Remove background'.");
     }
     setIsProcessing(false);
+  };
+
+  const checkerboardStyle = {
+    backgroundImage: `
+      linear-gradient(45deg, #e5e7eb 25%, transparent 25%), 
+      linear-gradient(-45deg, #e5e7eb 25%, transparent 25%), 
+      linear-gradient(45deg, transparent 75%, #e5e7eb 75%), 
+      linear-gradient(-45deg, transparent 75%, #e5e7eb 75%)
+    `,
+    backgroundSize: '20px 20px',
+    backgroundPosition: '0 0, 0 10px, 10px -10px, -10px 0px',
   };
 
   return (
@@ -75,17 +89,18 @@ const ProductStudio: React.FC<ProductStudioProps> = ({ onBack }) => {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
         <div className="space-y-4">
           <div className="bg-white dark:bg-[#0f172a] rounded-[3.5rem] p-6 border border-slate-100 dark:border-slate-800 shadow-sm">
-            <h3 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-2">Source Image</h3>
+            <h3 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-2">Source Image (Blank)</h3>
             <div 
               onClick={() => !image && fileInputRef.current?.click()}
-              className={`aspect-square rounded-[2.5rem] border-2 border-dashed flex items-center justify-center overflow-hidden transition-all ${
+              className={`aspect-square rounded-[2.5rem] border-2 border-dashed flex items-center justify-center overflow-hidden transition-all relative ${
                 image ? 'border-transparent bg-slate-50 dark:bg-slate-900' : 'border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-900 hover:border-blue-200 cursor-pointer'
               }`}
             >
+              <div className="absolute inset-0 opacity-10 dark:opacity-5" style={checkerboardStyle}></div>
               {image ? (
-                <img src={image} className="w-full h-full object-contain p-6" alt="Original Product" />
+                <img src={image} className="w-full h-full object-contain p-6 relative z-10" alt="Original Product" />
               ) : (
-                <div className="text-center p-12 space-y-4 opacity-30">
+                <div className="text-center p-12 space-y-4 opacity-30 relative z-10">
                   <div className="text-6xl">📸</div>
                   <p className="font-black text-slate-400">Click to upload product photo</p>
                 </div>
@@ -95,13 +110,14 @@ const ProductStudio: React.FC<ProductStudioProps> = ({ onBack }) => {
         </div>
 
         <div className="space-y-4">
-          <div className="bg-white dark:bg-[#0f172a] rounded-[3.5rem] p-6 border border-slate-100 dark:border-slate-800 shadow-2xl relative">
+          <div className="bg-white dark:bg-[#0f172a] rounded-[3.5rem] p-6 border border-slate-100 dark:border-slate-800 shadow-2xl relative overflow-hidden">
              <h3 className="text-sm font-black text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-4 px-2">Processed Result</h3>
             <div className="aspect-square rounded-[2.5rem] bg-[#f8fafc] dark:bg-slate-900/50 flex items-center justify-center overflow-hidden border border-white dark:border-slate-800 relative shadow-inner">
+              <div className="absolute inset-0 opacity-20 dark:opacity-10" style={checkerboardStyle}></div>
               {editedImage ? (
-                <img src={editedImage} className="w-full h-full object-contain p-6 animate-in zoom-in duration-500" alt="AI Edited Result" />
+                <img src={editedImage} className="w-full h-full object-contain p-6 animate-in zoom-in duration-500 relative z-10" alt="AI Edited Result" />
               ) : isProcessing ? (
-                <div className="text-center space-y-6">
+                <div className="text-center space-y-6 relative z-10">
                   <div className="relative w-16 h-16 mx-auto">
                     <div className="absolute inset-0 border-4 border-blue-50 dark:border-slate-800 rounded-full"></div>
                     <div className="absolute inset-0 border-4 border-[#2f80ed] border-t-transparent rounded-full animate-spin"></div>
@@ -109,9 +125,9 @@ const ProductStudio: React.FC<ProductStudioProps> = ({ onBack }) => {
                   <p className="font-black text-[#1e2a3a] dark:text-white text-xs uppercase tracking-widest">Synthesizing Studio Shot...</p>
                 </div>
               ) : (
-                <div className="text-center space-y-4 opacity-10">
+                <div className="text-center space-y-4 opacity-10 relative z-10">
                   <div className="text-7xl">✨</div>
-                  <p className="font-black text-slate-400">AI output will appear here</p>
+                  <p className="font-black text-slate-400 uppercase tracking-[0.2em] text-[10px]">AI output will appear here</p>
                 </div>
               )}
             </div>
@@ -148,10 +164,10 @@ const ProductStudio: React.FC<ProductStudioProps> = ({ onBack }) => {
             {[
               "Remove background",
               "Set white background",
-              "Remove surface dust",
+              "Clean background",
               "Enhance lighting",
-              "Soft shadows",
-              "Clean up labels"
+              "Studio setup",
+              "Transparent BG"
             ].map(hint => (
               <button 
                 key={hint}
@@ -167,7 +183,7 @@ const ProductStudio: React.FC<ProductStudioProps> = ({ onBack }) => {
         <div className="absolute bottom-0 left-0 w-48 h-48 bg-purple-500/10 rounded-full blur-[80px]"></div>
       </div>
 
-      <input type="file" ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
+      <input type="file" hideen ref={fileInputRef} onChange={handleFileChange} accept="image/*" className="hidden" />
     </div>
   );
 };

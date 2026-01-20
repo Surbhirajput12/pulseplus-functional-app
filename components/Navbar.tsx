@@ -1,122 +1,143 @@
 
 import React, { useState } from 'react';
 import { AppView, Language } from '../types';
+import { translations } from '../i18n';
 import Logo from './Logo';
-import LoginForm from './LoginForm';
 
 interface NavbarProps {
   currentView: AppView;
   setView: (view: AppView) => void;
-  cartCount: number;
+  lang: Language;
+  setLang: (lang: Language) => void;
   isDarkMode: boolean;
   toggleDarkMode: () => void;
-  lang: Language;
-  toggleLang: () => void;
+  onLogin: () => void;
 }
 
-const Navbar: React.FC<NavbarProps> = ({ currentView, setView, cartCount, isDarkMode, toggleDarkMode, lang, toggleLang }) => {
-  const [showLogin, setShowLogin] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+const Navbar: React.FC<NavbarProps> = ({ currentView, setView, lang, setLang, isDarkMode, toggleDarkMode, onLogin }) => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const t = translations[lang].nav;
+  
+  const menuItems = [
+    { label: t.home, view: AppView.HOME },
+    { label: t.consult, view: AppView.CONSULT },
+    { label: t.wellness, view: AppView.NUTRITION_GUIDE },
+    { label: t.pharmacy, view: AppView.STORE },
+    { label: t.account, view: AppView.ACCOUNT },
+  ];
+
+  const handleNavClick = (view: AppView) => {
+    setView(view);
+    setIsMenuOpen(false);
+  };
 
   return (
-    <>
-      <header className="bg-white/80 dark:bg-[#0f172a]/80 backdrop-blur-md sticky top-0 z-[100] border-b border-slate-100 dark:border-slate-800 shadow-sm transition-all duration-300">
-        <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-20">
-            <div 
-              className="flex items-center gap-3 cursor-pointer group"
-              onClick={() => setView(AppView.HOME)}
+    <header className="bg-white/90 dark:bg-[#070b14]/90 backdrop-blur-xl sticky top-0 z-[100] border-b border-slate-100 dark:border-white/5 shadow-sm transition-all">
+      <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-between items-center h-20">
+          {/* Logo Section - Fixed Branding */}
+          <div 
+            className="flex items-center gap-3 cursor-pointer group shrink-0"
+            onClick={() => setView(AppView.HOME)}
+          >
+            <Logo className="w-10 h-10 group-hover:scale-105 transition-transform duration-300" />
+            <span className="text-2xl font-mono font-black text-[#1e2a3a] dark:text-white tracking-tighter uppercase">
+              Pulse<span className="text-[#2f80ed]">+</span>
+            </span>
+          </div>
+
+          {/* Desktop Navigation - Full Screen */}
+          <nav className="hidden lg:flex items-center gap-1">
+            {menuItems.map((item) => (
+              <button
+                key={item.label}
+                onClick={() => handleNavClick(item.view)}
+                className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                  currentView === item.view 
+                    ? 'text-[#2f80ed] bg-blue-50 dark:bg-blue-500/10 shadow-sm' 
+                    : 'text-slate-500 dark:text-slate-400 hover:text-[#1e2a3a] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+          </nav>
+
+          {/* Action Buttons & Mobile Toggle */}
+          <div className="flex items-center gap-2 sm:gap-3">
+            <button 
+              onClick={() => setLang(lang === Language.EN ? Language.HI : Language.EN)}
+              className="hidden sm:block px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-200 text-[10px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700 hover:bg-slate-100 transition-all"
             >
-              <Logo className="w-10 h-10" />
-              <span className="text-2xl font-black text-[#1e2a3a] dark:text-white tracking-tighter">Pulseplus</span>
-            </div>
+              {lang === Language.EN ? 'हिंदी' : 'English'}
+            </button>
+            
+            <button 
+              onClick={toggleDarkMode}
+              className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-[#1e2a3a] dark:text-yellow-400 border border-slate-200 dark:border-slate-700 hover:scale-105 transition-all"
+              aria-label="Toggle Dark Mode"
+            >
+              {isDarkMode ? '☀️' : '🌙'}
+            </button>
 
-            <nav className="hidden lg:flex items-center gap-1">
-              {[
-                { label: 'Home', view: AppView.HOME },
-                { label: 'Consult', view: AppView.CONSULT },
-                { label: 'Pharmacy', view: AppView.STORE },
-                { label: 'Studio', view: AppView.PRODUCT_STUDIO },
-                { label: 'Wellness', view: AppView.WELLNESS },
-                { label: 'Vault', view: AppView.ACCOUNT },
-              ].map((item) => (
-                <button
-                  key={item.label}
-                  onClick={() => setView(item.view)}
-                  className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
-                    currentView === item.view 
-                      ? 'text-[#2f80ed] bg-blue-50 dark:bg-blue-500/10' 
-                      : 'text-slate-500 dark:text-slate-400 hover:text-[#1e2a3a] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
-                  }`}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </nav>
+            <button 
+              onClick={onLogin}
+              className="hidden sm:block bg-[#1e2a3a] dark:bg-[#2f80ed] text-white px-5 lg:px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-blue-500/10"
+            >
+              {t.login}
+            </button>
 
-            <div className="flex items-center gap-3">
-              <button 
-                onClick={toggleLang}
-                className="px-3 py-1.5 rounded-lg bg-slate-50 dark:bg-slate-800 border border-slate-200 dark:border-slate-700 text-[10px] font-black uppercase text-slate-500 dark:text-slate-300 hover:border-blue-400 transition-all"
-              >
-                {lang === Language.EN ? 'EN' : 'हिं'}
-              </button>
-
-              <button 
-                onClick={toggleDarkMode}
-                className="p-2.5 rounded-xl bg-[#f8fafc] dark:bg-slate-800 text-[#1e2a3a] dark:text-yellow-400 border border-slate-200 dark:border-slate-700 hover:scale-105 active:scale-95 transition-all shadow-sm"
-                aria-label="Toggle Dark Mode"
-              >
-                {isDarkMode ? '☀️' : '🌙'}
-              </button>
-
-              <button 
-                onClick={() => setView(AppView.STORE)}
-                className="p-2.5 text-slate-500 dark:text-slate-400 hover:text-[#2f80ed] relative"
-              >
-                <span className="text-xl">🛒</span>
-                {cartCount > 0 && (
-                  <span className="bg-[#2f80ed] text-white text-[9px] font-black px-1.5 py-0.5 rounded-full absolute -top-1 -right-1 ring-2 ring-white dark:ring-[#0f172a]">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-              
-              <button 
-                onClick={() => setShowLogin(true)}
-                className="hidden sm:flex bg-[#1e2a3a] dark:bg-[#2f80ed] text-white px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
-              >
-                ABHA LOGIN
-              </button>
-
-              <button 
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="lg:hidden p-2 text-slate-500 dark:text-slate-400"
-              >
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d={isMobileMenuOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
-                </svg>
-              </button>
-            </div>
+            {/* Mobile Menu Button */}
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="lg:hidden p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-[#1e2a3a] dark:text-white border border-slate-200 dark:border-slate-700"
+              aria-label="Open Menu"
+            >
+              {isMenuOpen ? (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
+              ) : (
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16M4 18h16" /></svg>
+              )}
+            </button>
           </div>
         </div>
+      </div>
 
-        {isMobileMenuOpen && (
-          <div className="lg:hidden bg-white dark:bg-[#0f172a] border-t border-slate-100 dark:border-slate-800 p-6 space-y-4 animate-in slide-in-from-top duration-300 shadow-2xl">
-             <div className="grid grid-cols-2 gap-4">
-                <button onClick={() => { setView(AppView.HOME); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white border border-slate-100 dark:border-slate-700">Home</button>
-                <button onClick={() => { setView(AppView.CONSULT); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white border border-slate-100 dark:border-slate-700">Consult</button>
-                <button onClick={() => { setView(AppView.STORE); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white border border-slate-100 dark:border-slate-700">Pharmacy</button>
-                <button onClick={() => { setView(AppView.PRODUCT_STUDIO); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white border border-slate-100 dark:border-slate-700">Studio</button>
-                <button onClick={() => { setView(AppView.WELLNESS); setIsMobileMenuOpen(false); }} className="p-4 rounded-2xl bg-slate-50 dark:bg-slate-800 font-black text-[10px] uppercase text-[#1e2a3a] dark:text-white border border-slate-100 dark:border-slate-700">Wellness</button>
-             </div>
-             <button onClick={() => { setShowLogin(true); setIsMobileMenuOpen(false); }} className="w-full bg-[#1e2a3a] dark:bg-[#2f80ed] text-white py-4 rounded-2xl font-black uppercase text-xs shadow-lg">Login with ABHA</button>
-          </div>
-        )}
-      </header>
-
-      {showLogin && <LoginForm onClose={() => setShowLogin(false)} />}
-    </>
+      {/* Mobile Menu Overlay */}
+      {isMenuOpen && (
+        <div className="lg:hidden fixed inset-0 top-20 z-[90] bg-white/95 dark:bg-[#070b14]/95 backdrop-blur-xl animate-in fade-in slide-in-from-top-4 duration-300">
+          <nav className="flex flex-col p-6 space-y-4">
+            {menuItems.map((item) => (
+              <button
+                key={item.label}
+                onClick={() => handleNavClick(item.view)}
+                className={`w-full p-5 rounded-2xl text-left text-sm font-black uppercase tracking-widest transition-all ${
+                  currentView === item.view 
+                    ? 'text-[#2f80ed] bg-blue-50 dark:bg-blue-500/10' 
+                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
+            <div className="pt-6 border-t border-slate-100 dark:border-white/5 space-y-4">
+               <button 
+                onClick={() => { setLang(lang === Language.EN ? Language.HI : Language.EN); setIsMenuOpen(false); }}
+                className="w-full p-5 rounded-2xl text-left text-sm font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800"
+              >
+                Switch Language: {lang === Language.EN ? 'हिंदी' : 'English'}
+              </button>
+              <button 
+                onClick={() => { onLogin(); setIsMenuOpen(false); }}
+                className="w-full p-5 rounded-2xl text-left text-sm font-black uppercase tracking-widest text-white bg-[#1e2a3a] dark:bg-[#2f80ed] shadow-xl"
+              >
+                {t.login}
+              </button>
+            </div>
+          </nav>
+        </div>
+      )}
+    </header>
   );
 };
 

@@ -2,28 +2,27 @@
 export enum AppView {
   HOME = 'home',
   STORE = 'store',
-  WELLNESS = 'wellness',
-  ACCOUNT = 'account',
-  DIET_PLAN = 'diet-plan',
-  NUTRITION_GUIDE = 'nutrition-guide',
+  DIET_PLAN = 'diet_plan',
+  NUTRITION_GUIDE = 'nutrition_guide',
   YOGA = 'yoga',
-  CONSULT = 'consult',
+  ACCOUNT = 'account',
+  EQUIPMENT_PORTAL = 'equipment_portal',
   PROFILE = 'profile',
-  LAB_REPORTS = 'lab-reports',
+  LAB_REPORTS = 'lab_reports',
   PRESCRIPTIONS = 'prescriptions',
   VITALS = 'vitals',
+  CONSULT = 'consult',
   SCANNER = 'scanner',
-  EQUIPMENT_PORTAL = 'equipment-portal',
-  PRODUCT_STUDIO = 'product-studio'
+  WELLNESS = 'wellness'
 }
 
 export enum Language {
-  EN = 'English',
-  HI = 'हिन्दी'
+  EN = 'en',
+  HI = 'hi'
 }
 
 export interface ChatMessage {
-  role: 'user' | 'bot';
+  role: 'bot' | 'user';
   text: string;
   image?: string;
 }
@@ -31,27 +30,15 @@ export interface ChatMessage {
 export interface Specialist {
   id: string;
   name: string;
+  specialty: string;
   description: string;
   fee: number;
   image: string;
   availability: 'available' | 'busy' | 'offline';
-  specialty: string;
   experience: number;
   mciNumber: string;
   education: string;
-  verificationSource: 'Ayushman Bharat' | 'MCI Verified' | 'Pulseplus Global';
-}
-
-export interface EquipmentItem {
-  id: string;
-  name: string;
-  brand: string;
-  category: 'Mobility' | 'Monitoring' | 'Respiratory' | 'Surgical';
-  price: number;
-  rentalPrice?: number;
-  status: 'In Stock' | 'Available for Rent' | 'Out of Stock';
-  image: string;
-  description: string;
+  verificationSource: string;
 }
 
 export interface Appointment {
@@ -64,11 +51,26 @@ export interface Appointment {
   reminderTiming: '24h' | '1h' | '15m';
 }
 
-export interface HomeRemedy {
+export interface Product {
+  id: string;
   name: string;
-  benefits: string;
-  ingredients: string[];
-  preparation: string;
+  price: number;
+  originalPrice: number;
+  category: 'Medicine' | 'Skincare' | 'Supplements' | 'Equipment' | 'Wellness';
+  image: string;
+  description: string;
+}
+
+export interface CartItem extends Product {
+  quantity: number;
+}
+
+export interface DietLog {
+  id: string;
+  item: string;
+  calories: number;
+  type: 'food' | 'water';
+  timestamp: number;
 }
 
 export interface DietAnalysis {
@@ -84,9 +86,29 @@ export interface DietAnalysis {
   alternatives: string[];
 }
 
+export interface EquipmentItem {
+  id: string;
+  name: string;
+  brand: string;
+  category: string;
+  price: number;
+  rentalPrice?: number;
+  status: string;
+  image: string;
+  description: string;
+}
+
+export interface HomeRemedy {
+  name: string;
+  benefits: string;
+  ingredients: string[];
+  preparation: string;
+}
+
 export interface StudioProject {
   id: string;
   original: string;
   edited: string;
+  prompt: string;
   timestamp: number;
 }

@@ -1,8 +1,9 @@
 {
-  "name": "Pulseplus Health Platform",
-  "description": "An integrated healthcare platform for medical consulting, diet planning, and health records.",
+  "name": "Pulseplus - Unified Health Stack",
+  "description": "Integrated healthcare platform for ABHA management, AI-driven wellness, and clinical pharmacy.",
   "requestFramePermissions": [
     "camera",
-    "microphone"
+    "microphone",
+    "geolocation"
   ]
 }
