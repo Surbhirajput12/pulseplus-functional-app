@@ -13,7 +13,9 @@ export enum AppView {
   VITALS = 'vitals',
   CONSULT = 'consult',
   SCANNER = 'scanner',
-  WELLNESS = 'wellness'
+  WELLNESS = 'wellness',
+  EXCHANGE_HUB = 'exchange_hub',
+  AMBULANCE = 'ambulance'
 }
 
 export enum Language {
@@ -73,6 +75,7 @@ export interface DietLog {
   timestamp: number;
 }
 
+// Added DietAnalysis interface to resolve "DietAnalysis" not exported error
 export interface DietAnalysis {
   foodItem: string;
   macros: {

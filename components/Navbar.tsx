@@ -20,10 +20,11 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView, lang, setLang, is
   
   const menuItems = [
     { label: t.home, view: AppView.HOME },
+    { label: "Pharmacy", view: AppView.STORE },
+    { label: "Emergency", view: AppView.AMBULANCE },
+    { label: "Equipment", view: AppView.EQUIPMENT_PORTAL },
     { label: t.consult, view: AppView.CONSULT },
     { label: t.wellness, view: AppView.NUTRITION_GUIDE },
-    { label: t.pharmacy, view: AppView.STORE },
-    { label: t.account, view: AppView.ACCOUNT },
   ];
 
   const handleNavClick = (view: AppView) => {
@@ -35,7 +36,6 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView, lang, setLang, is
     <header className="bg-white/90 dark:bg-[#070b14]/90 backdrop-blur-xl sticky top-0 z-[100] border-b border-slate-100 dark:border-white/5 shadow-sm transition-all">
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-20">
-          {/* Logo Section - Fixed Branding */}
           <div 
             className="flex items-center gap-3 cursor-pointer group shrink-0"
             onClick={() => setView(AppView.HOME)}
@@ -46,13 +46,13 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView, lang, setLang, is
             </span>
           </div>
 
-          {/* Desktop Navigation - Full Screen */}
           <nav className="hidden lg:flex items-center gap-1">
             {menuItems.map((item) => (
               <button
                 key={item.label}
                 onClick={() => handleNavClick(item.view)}
                 className={`px-4 py-2 rounded-xl text-[11px] font-black uppercase tracking-wider transition-all ${
+                  item.label === 'Emergency' ? 'text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10' :
                   currentView === item.view 
                     ? 'text-[#2f80ed] bg-blue-50 dark:bg-blue-500/10 shadow-sm' 
                     : 'text-slate-500 dark:text-slate-400 hover:text-[#1e2a3a] dark:hover:text-white hover:bg-slate-50 dark:hover:bg-slate-800'
@@ -63,78 +63,36 @@ const Navbar: React.FC<NavbarProps> = ({ currentView, setView, lang, setLang, is
             ))}
           </nav>
 
-          {/* Action Buttons & Mobile Toggle */}
           <div className="flex items-center gap-2 sm:gap-3">
-            <button 
-              onClick={() => setLang(lang === Language.EN ? Language.HI : Language.EN)}
-              className="hidden sm:block px-4 py-2 rounded-xl bg-slate-50 dark:bg-slate-800 text-slate-600 dark:text-slate-200 text-[10px] font-black uppercase tracking-widest border border-slate-200 dark:border-slate-700 hover:bg-slate-100 transition-all"
-            >
-              {lang === Language.EN ? 'हिंदी' : 'English'}
-            </button>
-            
             <button 
               onClick={toggleDarkMode}
               className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-[#1e2a3a] dark:text-yellow-400 border border-slate-200 dark:border-slate-700 hover:scale-105 transition-all"
-              aria-label="Toggle Dark Mode"
             >
               {isDarkMode ? '☀️' : '🌙'}
             </button>
 
             <button 
               onClick={onLogin}
-              className="hidden sm:block bg-[#1e2a3a] dark:bg-[#2f80ed] text-white px-5 lg:px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg shadow-blue-500/10"
+              className="hidden sm:block bg-[#1e2a3a] dark:bg-[#2f80ed] text-white px-5 lg:px-6 py-2.5 rounded-xl font-black text-[10px] uppercase tracking-widest hover:scale-105 active:scale-95 transition-all shadow-lg"
             >
-              {t.login}
+              ABHA Login
             </button>
 
-            {/* Mobile Menu Button */}
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="lg:hidden p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-[#1e2a3a] dark:text-white border border-slate-200 dark:border-slate-700"
-              aria-label="Open Menu"
+              className="lg:hidden p-2.5 rounded-xl bg-slate-50 dark:bg-slate-800 text-[#1e2a3a] dark:text-white border border-slate-200"
             >
-              {isMenuOpen ? (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M6 18L18 6M6 6l12 12" /></svg>
-              ) : (
-                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M4 6h16M4 12h16M4 18h16" /></svg>
-              )}
+              ☰
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Menu Overlay */}
       {isMenuOpen && (
-        <div className="lg:hidden fixed inset-0 top-20 z-[90] bg-white/95 dark:bg-[#070b14]/95 backdrop-blur-xl animate-in fade-in slide-in-from-top-4 duration-300">
-          <nav className="flex flex-col p-6 space-y-4">
-            {menuItems.map((item) => (
-              <button
-                key={item.label}
-                onClick={() => handleNavClick(item.view)}
-                className={`w-full p-5 rounded-2xl text-left text-sm font-black uppercase tracking-widest transition-all ${
-                  currentView === item.view 
-                    ? 'text-[#2f80ed] bg-blue-50 dark:bg-blue-500/10' 
-                    : 'text-slate-600 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
-                }`}
-              >
-                {item.label}
-              </button>
-            ))}
-            <div className="pt-6 border-t border-slate-100 dark:border-white/5 space-y-4">
-               <button 
-                onClick={() => { setLang(lang === Language.EN ? Language.HI : Language.EN); setIsMenuOpen(false); }}
-                className="w-full p-5 rounded-2xl text-left text-sm font-black uppercase tracking-widest text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800"
-              >
-                Switch Language: {lang === Language.EN ? 'हिंदी' : 'English'}
-              </button>
-              <button 
-                onClick={() => { onLogin(); setIsMenuOpen(false); }}
-                className="w-full p-5 rounded-2xl text-left text-sm font-black uppercase tracking-widest text-white bg-[#1e2a3a] dark:bg-[#2f80ed] shadow-xl"
-              >
-                {t.login}
-              </button>
-            </div>
-          </nav>
+        <div className="lg:hidden absolute top-20 w-full bg-white dark:bg-[#070b14] border-b p-6 space-y-4 animate-in slide-in-from-top duration-300">
+           {menuItems.map((item) => (
+              <button key={item.label} onClick={() => handleNavClick(item.view)} className="w-full text-left p-4 rounded-2xl font-black uppercase text-xs tracking-widest text-slate-500 hover:bg-slate-50">{item.label}</button>
+           ))}
         </div>
       )}
     </header>

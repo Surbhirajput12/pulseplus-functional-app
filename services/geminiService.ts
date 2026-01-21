@@ -1,5 +1,7 @@
 
 import { GoogleGenAI, GenerateContentResponse, Type } from "@google/genai";
+// Import DietAnalysis from types
+import { DietAnalysis } from "../types";
 
 const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 
@@ -29,7 +31,8 @@ export async function askHealthBot(question: string, base64Image?: string): Prom
   }
 }
 
-export async function analyzeFoodItem(input: string): Promise<any> {
+// Updated return type to use the DietAnalysis interface
+export async function analyzeFoodItem(input: string): Promise<DietAnalysis | null> {
   try {
     const response: GenerateContentResponse = await ai.models.generateContent({
       model: 'gemini-3-flash-preview',
@@ -58,6 +61,7 @@ export async function analyzeFoodItem(input: string): Promise<any> {
         }
       }
     });
+    // response.text directly returns the extracted string output
     return JSON.parse(response.text || "{}");
   } catch (error) {
     console.error(error);
